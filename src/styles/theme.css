@@ -1,0 +1,226 @@
+/* Water + Up — aqua (and a light theme), a filling glass. Ported from the
+   prototype. Entrances animate transform only (opacity stays 1). */
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #0e1820;
+  --color-accent: #3fa6c8;
+  --font-ui: 'Hanken Grotesk', system-ui, sans-serif;
+}
+
+:root {
+  --accent: #3fa6c8;
+  --ui: 'Hanken Grotesk', system-ui, sans-serif;
+}
+[data-theme='aqua'] {
+  --bg: #0e1820;
+  --bg2: #0a1218;
+  --surface: #16242d;
+  --surface2: #1f303a;
+  --line: rgba(200, 235, 245, 0.1);
+  --ink: #e6f0f4;
+  --dim: #93aab4;
+  --faint: #5f727b;
+  --on: #06121a;
+  --soft: color-mix(in oklab, var(--accent) 18%, transparent);
+  color-scheme: dark;
+}
+[data-theme='light'] {
+  --bg: #eef5f7;
+  --bg2: #e3eef1;
+  --surface: #fff;
+  --surface2: #e8f1f4;
+  --line: rgba(15, 45, 55, 0.12);
+  --ink: #13242c;
+  --dim: #4f656e;
+  --faint: #8aa0a8;
+  --on: #06121a;
+  --soft: color-mix(in oklab, var(--accent) 14%, transparent);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: radial-gradient(130% 90% at 50% 8%, var(--bg), var(--bg2));
+  color: var(--ink);
+  font-family: var(--ui);
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.4s;
+}
+button {
+  font-family: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+.stage {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.word {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  margin-bottom: clamp(22px, 6vh, 46px);
+}
+.h1 {
+  font-weight: 800;
+  font-size: clamp(26px, 7vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+.sub {
+  color: var(--dim);
+  font-size: 15.5px;
+  line-height: 1.55;
+  margin: 0 0 28px;
+  max-width: 300px;
+}
+.glass {
+  position: relative;
+  width: 120px;
+  height: 150px;
+  border: 3px solid var(--accent);
+  border-top: none;
+  border-radius: 0 0 26px 26px;
+  margin-bottom: 26px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.glass .fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(var(--accent), color-mix(in oklab, var(--accent) 70%, #0a3a4a));
+  transition: height 0.6s cubic-bezier(0.3, 1, 0.4, 1);
+}
+.glass .pct {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 26px;
+  color: var(--ink);
+  mix-blend-mode: difference;
+}
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: var(--on);
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: 0 12px 30px color-mix(in oklab, var(--accent) 30%, transparent);
+  transition:
+    filter 0.15s,
+    transform 0.1s;
+}
+.cta:hover {
+  filter: brightness(1.07);
+}
+.cta:active {
+  transform: scale(0.97);
+}
+.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  box-shadow: none;
+}
+.stats {
+  display: flex;
+  gap: 26px;
+  margin-top: 8px;
+  margin-bottom: 26px;
+}
+.st {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.st b {
+  font-size: 24px;
+  font-weight: 800;
+}
+.st span {
+  font-size: 12px;
+  color: var(--faint);
+}
+.timer {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--accent);
+  margin-bottom: 20px;
+  font-variant-numeric: tabular-nums;
+}
+.corner {
+  position: fixed;
+  top: 18px;
+  inset-inline-end: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+  font-size: 18px;
+}
+.corner-l {
+  inset-inline-start: 18px;
+  inset-inline-end: auto;
+}
+.big-cue {
+  font-size: 54px;
+  margin-bottom: 10px;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
